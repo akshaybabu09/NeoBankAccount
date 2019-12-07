@@ -44,3 +44,14 @@ python manage.py runserver
 
 ## Things To Accomplish
 Login & Logout Functionalities
+
+## Explanation
+Once a user submits the create user form, an account will be created with the phone number. The ifsc code will be randomly picked from a list of 3 ifsc codes. Upon creating the account, a token is shared in the response. Using this token, the user can now fill in his/her personal information. 
+
+Using the token when the user fetches home API, he/she will get a response of his/her personal information.
+
+When a user tries to fetch user details using phone number as URL Parameter, it is consideered as a Third party request and only the public data will be shared.
+
+#### Now I am working on building the Login & Logout functionalities for the user.
+
+# Thank You!
