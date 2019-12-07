@@ -83,32 +83,31 @@ class UpdateUserDetailsAPI(APIView):
             return Response(ERROR_MSG, status=HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-# class UserLoginAPI(APIView):
-#     get_serializer = UserLoginSerializer
-#
-#     def post(self, request):
-#         try:
-#             mobile = request.data.get('mobile')
-#             print(type(mobile))
-#             serializer = self.get_serializer(data=request.data)
-#
-#             serializer.is_valid(raise_exception=True)
-#             user = serializer.validated_data
-#
-#             json = fetch_token_for_user(user)
-#
-#             return Response(json, status=HTTP_200_OK)
-#         except:
-#             return Response(ERROR_MSG, status=HTTP_500_INTERNAL_SERVER_ERROR)
-#
-#
-# class UserLogoutAPI(APIView):
-#     authentication_classes = (TokenAuthentication,)
-#     permission_classes = (IsAuthenticated,)
-#
-#     def get(self, request):
-#         try:
-#             request.user.auth_token.delete()
-#             return Response(LOGOUT_MSG, status=HTTP_200_OK)
-#         except:
-#             return Response(ERROR_MSG, status=HTTP_500_INTERNAL_SERVER_ERROR)
+class UserLoginAPI(APIView):
+    get_serializer = UserLoginSerializer
+
+    def post(self, request):
+        try:
+            serializer = self.get_serializer(data=request.data)
+
+            if serializer.is_valid():
+                user = serializer.validated_data
+
+                json = fetch_token_for_user(user)
+
+                return Response(json, status=HTTP_200_OK)
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+        except:
+            return Response(ERROR_MSG, status=HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class UserLogoutAPI(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        try:
+            request.user.auth_token.delete()
+            return Response(LOGOUT_MSG, status=HTTP_200_OK)
+        except:
+            return Response(ERROR_MSG, status=HTTP_500_INTERNAL_SERVER_ERROR)

@@ -78,3 +78,10 @@ def fetch_token_for_user(user, register=False):
         'token': token.key,
         'message': LOGIN_MSG
     }
+
+
+def user_authentication(**data):
+    user = UserProfile.objects.get(mobile=int(data['mobile']))
+    verfied_user = user.check_password(data['password'])
+    if verfied_user:
+        return user

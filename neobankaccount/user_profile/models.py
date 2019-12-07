@@ -69,6 +69,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin, TimeStampModel):
     account_active = models.BooleanField(default=False)
     account_number = models.BigIntegerField(unique=True, null=True)
     ifsc_code = models.CharField(max_length=11, blank=False, null=False)
+    password = models.CharField(max_length=100, blank=False, null=False)
 
     is_staff = models.BooleanField(
         default=False,
@@ -76,6 +77,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin, TimeStampModel):
             'Designates whether the user is a Django User and can log into Django Dashboard'
             ),
     )
+    is_active = models.BooleanField(default=True)
 
     objects = UserManager()
 
@@ -83,3 +85,9 @@ class UserProfile(AbstractBaseUser, PermissionsMixin, TimeStampModel):
 
     def __str__(self):
         return str(self.mobile)
+
+    def check_password(self, raw_password):
+        if self.password == raw_password:
+            return True
+        else:
+            return False

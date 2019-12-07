@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate
 from rest_framework import serializers
 
 from user_profile.models import UserProfile
+from user_profile.services import user_authentication
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -36,25 +37,24 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return user
 
 
-# class UserLoginSerializer(serializers.ModelSerializer):
-#     mobile = serializers.IntegerField(
-#         min_value=5000000000,
-#         max_value=9999999999,
-#         required=True
-#     )
-#     password = serializers.CharField(required=True)
-#
-#     def validate(self, data):
-#         print(data)
-#         user = authenticate(**data)
-#         print(user)
-#
-#         if user is None:
-#             raise serializers.ValidationError("Either username or password is incorrect.")
-#
-#     class Meta:
-#         model = UserProfile
-#         fields = (
-#             'mobile',
-#             'password',
-#         )
+class UserLoginSerializer(serializers.ModelSerializer):
+    mobile = serializers.IntegerField(
+        min_value=5000000000,
+        max_value=9999999999,
+        required=True
+    )
+    password = serializers.CharField(required=True)
+
+    def validate(self, data):
+        user = user_authentication(**data)
+
+        if user is None:
+            raise serializers.ValidationError("Either username or password is incorrect.")
+        return user
+
+    class Meta:
+        model = UserProfile
+        fields = (
+            'mobile',
+            'password',
+        )
