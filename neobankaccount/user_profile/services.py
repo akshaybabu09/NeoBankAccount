@@ -1,29 +1,9 @@
 import random
 
-from user_profile.constants import IFSC_CODES
+from rest_framework.authtoken.models import Token
+
+from user_profile.constants import *
 from user_profile.models import UserProfile
-
-
-def create_bank_account(user):
-    user_ob = UserProfile.objects.get(user_id=user.user_id)
-    # print(user_ob)
-    user_ob.bank_account = user.mobile
-    # user_ob.ifsc = 'abcd0001234'
-    user_ob.save()
-
-    print('Bank Account Created!!!!!!')
-
-
-def display_account_details(user):
-    account_details = UserProfile.objects.get(user_id=user.user_id)
-    print('Bank Account Fetched!!!!')
-    print(account_details.account_number)
-    details = {
-        'account_number': account_details.account_number,
-        'ifsc': account_details.ifsc
-    }
-    print(details)
-    return details
 
 
 def arrange_data(data):
@@ -54,14 +34,47 @@ def fetch_user_details_from_mobile(mobile):
     user = UserProfile.objects.get(mobile=mobile)
     if user:
         return {
+            'Name': user.display_name,
             'Mobile Number': user.mobile,
-            'PAN Number': user.pan_detail,
-            'Aadhaar Number': user.aadhaar_number,
             'Account Number': user.account_number,
             'IFSC Code': user.ifsc_code
         }, None
     return None, 'User Does not Exist!!!!'
 
 
-def update_user_details(details):
-    return 0
+def fetch_user_details(user):
+    return {
+        'Name': user.display_name,
+        'Mobile Number': user.mobile,
+        'Email': user.email,
+        'Address': user.address,
+        'Pincode': user.pincode,
+        'PAN Number': user.pan_detail,
+        'Aadhaar Number': user.aadhaar_number,
+        'Account Number': user.account_number,
+        'IFSC Code': user.ifsc_code
+        }, None
+
+
+def update_user_details(user, user_data):
+    user.display_name = user_data.get('display_name', None).upper()
+    user.gender = user_data.get('gender', None)
+    user.address = user_data.get('address', None)
+    user.pincode = user_data.get('pincode', None)
+    user.email = user_data.get('email', None)
+    user.save()
+
+    return True
+
+
+def fetch_token_for_user(user, register=False):
+    token, created = Token.objects.get_or_create(user=user)
+    if register:
+        return {
+            'token': token.key,
+            'msg': ACCOUNT_CREATED_MSG
+        }
+    return {
+        'token': token.key,
+        'message': LOGIN_MSG
+    }
