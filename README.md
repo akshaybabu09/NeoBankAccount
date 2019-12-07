@@ -41,9 +41,7 @@ python manage.py runserver
 2. Fill in Personal Details
 3. Access User Home with Token Authentication
 4. Fetch Public Data of User with Phone Number (No Token Authentication)
-
-## Things To Accomplish
-Login & Logout Functionalities
+5. Login & Logout of User
 
 ## Explanation
 Once a user submits the create user form, an account will be created with the phone number. The ifsc code will be randomly picked from a list of 3 ifsc codes. Upon creating the account, a token is shared in the response. Using this token, the user can now fill in his/her personal information. 
@@ -52,6 +50,7 @@ Using the token when the user fetches home API, he/she will get a response of hi
 
 When a user tries to fetch user details using phone number as URL Parameter, it is consideered as a Third party request and only the public data will be shared.
 
-#### Now I am working on building the Login & Logout functionalities for the user.
+The user can Login with his/her phone number and password. 
+Logout functionality is also included.
 
 # Thank You!
